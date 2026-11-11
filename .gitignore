@@ -1,0 +1,12 @@
+# 编译产物
+*.o
+*.out
+test_*_O0
+test_*_O2
+test_*
+# 排除源文件名被误匹配
+!test.cpp
+!test_p99.cpp
+
+# 运行结果（results/ 下保留归档，临时的不进）
+results/results.txt
