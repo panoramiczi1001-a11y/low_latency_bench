@@ -1,12 +1,17 @@
-# 编译产物
+# 构建产物
 *.o
+*.obj
+*.exe
 *.out
-test_*_O0
-test_*_O2
-test_*
-# 排除源文件名被误匹配
-!test.cpp
-!test_p99.cpp
+ch03/*/cache_probe
+ch03/*/exp[0-9]
+ch03/*/test_3*_O0
+ch03/*/test_3*_O2
+ch03/*/x_3*
+ch03/*/t.o
+ch03/*/i.o
+ch03/*/tx
+ch03/*/tx.o
 
-# 运行结果（results/ 下保留归档，临时的不进）
-results/results.txt
+# 临时样本（归档数据放 results/，不 ignore）
+samples*.csv
