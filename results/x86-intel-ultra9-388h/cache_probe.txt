@@ -1,0 +1,26 @@
+== stride sweep (working set 64 KiB) ==
+stride    4 B      1.6 ns/hop
+stride    8 B      1.7 ns/hop
+stride   16 B      1.8 ns/hop
+stride   32 B      1.9 ns/hop
+stride   64 B      2.9 ns/hop
+stride  128 B      2.9 ns/hop
+stride  256 B      2.9 ns/hop
+stride  512 B      3.0 ns/hop
+
+== size sweep (stride 64 B) ==
+      16 KiB      1.2 ns/hop
+      32 KiB      1.2 ns/hop
+      64 KiB      2.9 ns/hop
+     128 KiB      2.9 ns/hop
+     256 KiB      3.8 ns/hop
+     512 KiB      4.3 ns/hop
+    1024 KiB      5.1 ns/hop
+    2048 KiB      6.2 ns/hop
+    4096 KiB     10.9 ns/hop
+    8192 KiB     13.6 ns/hop
+   16384 KiB     96.1 ns/hop
+   32768 KiB    118.2 ns/hop
+   65536 KiB    128.0 ns/hop
+  131072 KiB    134.9 ns/hop
+  262144 KiB    140.6 ns/hop
