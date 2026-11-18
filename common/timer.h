@@ -28,10 +28,16 @@ inline std::uint64_t now_ns() {
 }
 
 // 时钟声明分辨率（纳秒）。注意它不代表读一次的成本。
+// Windows 没有 clock_getres：std::chrono::steady_clock 在那里是 QPC，
+// 分度约 100 ns（1e7 计数/秒的倒数）。这个值只用于报告，不参与任何计算。
 inline double clock_resolution_ns() {
+#if defined(_WIN32)
+    return 100.0;
+#else
     timespec ts{};
     clock_getres(CLOCK_MONOTONIC, &ts);
     return static_cast<double>(ts.tv_sec) * 1e9 + static_cast<double>(ts.tv_nsec);
+#endif
 }
 
 // 计时器自身开销：连续取两次时间的中位差

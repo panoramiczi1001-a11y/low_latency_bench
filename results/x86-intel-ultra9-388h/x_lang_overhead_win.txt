@@ -1,0 +1,63 @@
+# x_lang_overhead —— Windows 侧原始输出（用户本机）
+# 机器：Intel Core Ultra X9 388H / Windows 11 Enterprise 26200
+# 编译器：MSVC 14.51.36231（Visual Studio 2026 BuildTools 18.8.2）
+# 解释器：CPython 3.14.6（python）、PyPy 3.12.15（pypy3.12-v8.0.1-win64）、numba（版本待补）
+# 全部 taskset 等价物：SetProcessAffinityMask(..., 1) 绑 CPU 0
+#
+# ============ 阶段 0：第一次跑，未绑核（错误口径，留作对照）============
+# cl /nologo /O2 /std:c++20 /EHsc /utf-8 /I..\common bench_cpp.cpp
+bench_cpp: nodes=131071 repeats=100
+clock_getres = 100 ns, timer overhead = 0 ns
+cpp recursive            n=    100  p50=1044300  p90= 1417500  p99=  2939700  p999=   2939700  max=    4380500  mean=1107824.0  (ns)
+nodes/run=131071  =>  p50 = 7.97 ns/node          <-- 未绑核，被调度到 E 核
+
+# python bench_cython_run.py 131071 100        （pinned to cpu0: False）
+cython recursive   n=    100  p50=   775.6us  p90=  1027.9us  p99=  1680.9us  min=   610.1us  max=  2231.2us
+=> p50 = 5.92 ns/node
+
+# pypy3 bench_py.py 131071 100                 （pinned to cpu0: False）
+py recursive       n=    100  p50=   3.05ms  p90=   3.80ms  p99=   4.76ms  min=   2.26ms  max=   5.46ms
+=> p50 = 23.3 ns/node
+
+# python bench_py.py 131071 100                （pinned to cpu0: False）
+py recursive       n=    100  p50=  35.72ms  p90=  51.93ms  p99=  56.37ms  min=  32.34ms  max=  58.82ms
+=> p50 = 272.6 ns/node
+
+# python bench_numba.py 131071 100             （pinned to cpu0: False）
+(first call incl. JIT compile: 1.9 ms)
+numba recursive    n=    100  p50=  1240.7us  p90=  2186.4us  p99=  4499.0us  min=  1059.2us  max=  4594.2us
+=> p50 = 9.47 ns/node
+
+# ============ 阶段 1：修好绑定后（正确口径）============
+# --- C++：MSVC /O2，程序内自绑 CPU 0，连跑三次 ---
+bench_cpp: nodes=131071 repeats=300
+clock_getres = 100 ns, timer overhead = 0 ns
+cpp recursive            n=    300  p50=  337400  p90=  418400  p99=   946300  p999=   1229700  max=    1311500  mean=375313.3  (ns)  => 2.57 ns/node
+cpp recursive            n=    300  p50=  337500  p90=  585800  p99=  1462300  p999=   2392400  max=    6053500  mean=429848.7  (ns)  => 2.57 ns/node
+cpp recursive            n=    300  p50=  337300  p90=  476700  p99=  1284100  p999=   1452500  max=    1499400  mean=394355.7  (ns)  => 2.57 ns/node
+# 三次 p50 完全一致（337.3–337.5 us）
+
+# --- C++：加 /GL（全程序优化）对照 ---
+cpp recursive            n=    300  p50=  339100  p90=  612600  p99=   680100  p999=    680300  max=     680300  mean=428358.7  (ns)  => 2.59 ns/node
+cpp recursive            n=    300  p50=  339600  p90=  472100  p99=   966100  p999=   1213600  max=    1462700  mean=388444.7  (ns)  => 2.59 ns/node
+# /GL 与不加无差别（2.59 vs 2.57），排除「缺 /GL」这个假设
+
+# --- Python 四组，绑核成功（pinned to cpu0: True）---
+cython recursive   n=    100  p50=   688.1us  p90=   983.4us  p99=  1483.5us  min=   610.9us  max=  2067.7us
+=> p50 = 5.25 ns/node
+
+py recursive       n=    100  p50=   1.65ms  p90=   2.74ms  p99=   3.35ms  min=   1.59ms  max=   3.46ms   (PyPy 3.12.15)
+=> p50 = 12.6 ns/node
+
+py recursive       n=    100  p50=  25.59ms  p90=  28.11ms  p99=  31.20ms  min=  22.99ms  max=  33.16ms  (CPython 3.14.6)
+=> p50 = 195.2 ns/node
+
+# numba：绑核后进程在 JIT 首次调用处静默退出，无输出、无报错 —— 待查。
+# （未绑核时同命令正常：9.47 ns/node）
+
+# ============ 汇总（ns/节点，p50，已绑核）============
+# CPython 195.2   1x
+# PyPy     12.6   15.5x faster
+# numba    ?      (未绑核 9.47)
+# Cython   5.25   37x faster
+# C++      2.57   76x faster

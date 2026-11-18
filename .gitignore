@@ -15,3 +15,16 @@ ch03/*/tx.o
 
 # 临时样本（归档数据放 results/，不 ignore）
 samples*.csv
+
+# Python / Cython 的构建产物（x_lang_overhead 等）
+__pycache__/
+*.pyc
+*.pyd
+*.so
+*.dll
+*.lib
+*.exp
+build/
+x_lang_overhead/bench_cpp
+x_lang_overhead/bench_cpp_gl
+x_lang_overhead/bench_cython.c

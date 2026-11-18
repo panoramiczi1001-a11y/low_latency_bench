@@ -1,0 +1,31 @@
+# x_lang_overhead —— C++ vs CPython，递归判平衡（隐式完全二叉树）
+# 环境：Intel Core Ultra X9 388H 虚拟机 2 vCPU / Ubuntu 22.04 / g++ 11.4 -O2 -std=c++20 / CPython 3.10.12
+# 绑核：taskset -c 0
+
+== nodes=32767 ==
+bench_cpp: nodes=32767 repeats=300
+clock_getres = 1 ns, timer overhead = 26 ns
+cpp recursive            n=    300  p50=  74199  p90=  112329  p99=   169107  p999=    174347  max=     294024  mean=80719.9  (ns)
+nodes/run=32767  =>  p50 每节点约 2.26 ns
+bench_py: nodes=32767 repeats=10 python=3.10.12
+py recursive       n=     10  p50=   7.78ms  p90=    8.54ms  p99=    8.54ms  min=   7.23ms  max=    8.99ms
+nodes/run=32767  =>  p50 每节点约 237.5 ns  (sink=150)
+
+== nodes=131071 ==
+bench_cpp: nodes=131071 repeats=300
+clock_getres = 1 ns, timer overhead = 20 ns
+cpp recursive            n=    300  p50= 451580  p90=  880087  p99=  1380658  p999=   1480413  max=    1490815  mean=525909.8  (ns)
+nodes/run=131071  =>  p50 每节点约 3.45 ns
+bench_py: nodes=131071 repeats=10 python=3.10.12
+py recursive       n=     10  p50=  32.62ms  p90=   34.65ms  p99=   34.65ms  min=  29.99ms  max=   38.15ms
+nodes/run=131071  =>  p50 每节点约 248.9 ns  (sink=170)
+
+== nodes=524287 ==
+bench_cpp: nodes=524287 repeats=300
+clock_getres = 1 ns, timer overhead = 26 ns
+cpp recursive            n=    300  p50=1246660  p90= 1971152  p99=  2889465  p999=   3122471  max=    3835173  mean=1413226.0  (ns)
+nodes/run=524287  =>  p50 每节点约 2.38 ns
+bench_py: nodes=524287 repeats=10 python=3.10.12
+py recursive       n=     10  p50= 137.75ms  p90=  142.75ms  p99=  142.75ms  min= 131.20ms  max=  153.40ms
+nodes/run=524287  =>  p50 每节点约 262.7 ns  (sink=190)
+
