@@ -1,0 +1,57 @@
+# x_invert_tree —— 翻转二叉树：递归 / 迭代DFS / 迭代BFS
+# 环境：Intel Core Ultra X9 388H 虚拟机 2 vCPU / g++ 11.4 -O2 -std=c++20 / taskset -c 0
+
+== h=10 ==
+bench_invert: h=10 nodes=2047 repeats=30 shape=perfect/level-layout
+clock_getres = 1 ns, timer overhead = 17 ns, peak_rss@start = 2688 KB
+recursive                n=     30  p50=   3424  p90=    3502  p99=     3541  p999=      3541  max=       3570  mean= 3412.5  (ns)
+   -> 1.67 ns/node, 递归最大深度=10 (log2 n=11.0)
+iterative DFS            n=     30  p50=   2483  p90=    2653  p99=     2821  p999=      2821  max=      12517  mean= 2854.8  (ns)
+   -> 1.21 ns/node, 显式栈最大长度=11 (预热时 11)
+iterative BFS            n=     30  p50=   3440  p90=    3959  p99=     4214  p999=      4214  max=      12440  mean= 3847.6  (ns)
+   -> 1.68 ns/node, 队列最大长度=1024 (预热时 1024)
+peak_rss@end = 3072 KB  (树本身 16376 B)
+
+== h=17 ==
+bench_invert: h=17 nodes=262143 repeats=30 shape=perfect/level-layout
+clock_getres = 1 ns, timer overhead = 17 ns, peak_rss@start = 2688 KB
+recursive                n=     30  p50= 770434  p90= 1060354  p99=  1238188  p999=   1238188  max=    1819108  mean=844613.9  (ns)
+   -> 2.94 ns/node, 递归最大深度=17 (log2 n=18.0)
+iterative DFS            n=     30  p50= 830239  p90=  865973  p99=   944752  p999=    944752  max=    1392462  mean=856598.9  (ns)
+   -> 3.17 ns/node, 显式栈最大长度=18 (预热时 18)
+iterative BFS            n=     30  p50= 383981  p90=  558329  p99=   633331  p999=    633331  max=     643595  mean=421452.0  (ns)
+   -> 1.46 ns/node, 队列最大长度=131072 (预热时 131072)
+peak_rss@end = 5504 KB  (树本身 2097144 B)
+
+== h=20 ==
+bench_invert: h=20 nodes=2097151 repeats=30 shape=perfect/level-layout
+clock_getres = 1 ns, timer overhead = 17 ns, peak_rss@start = 2688 KB
+recursive                n=     30  p50=6779630  p90= 7861955  p99=  7881167  p999=   7881167  max=    8662746  mean=6990690.2  (ns)
+   -> 3.23 ns/node, 递归最大深度=20 (log2 n=21.0)
+iterative DFS            n=     30  p50=6953785  p90= 7961006  p99=  8136117  p999=   8136117  max=    8207009  mean=7203056.6  (ns)
+   -> 3.32 ns/node, 显式栈最大长度=21 (预热时 21)
+iterative BFS            n=     30  p50=4183042  p90= 5030596  p99=  5512524  p999=   5512524  max=    6675620  mean=4381372.7  (ns)
+   -> 1.99 ns/node, 队列最大长度=1048576 (预热时 1048576)
+peak_rss@end = 23680 KB  (树本身 16777208 B)
+
+== h=22 ==
+bench_invert: h=22 nodes=8388607 repeats=30 shape=perfect/level-layout
+clock_getres = 1 ns, timer overhead = 17 ns, peak_rss@start = 2688 KB
+recursive                n=     30  p50=28145237  p90=29737815  p99= 30008963  p999=  30008963  max=   35786093  mean=28448245.3  (ns)
+   -> 3.36 ns/node, 递归最大深度=22 (log2 n=23.0)
+iterative DFS            n=     30  p50=29756144  p90=30782253  p99= 31179884  p999=  31179884  max=   35502177  mean=29875130.2  (ns)
+   -> 3.55 ns/node, 显式栈最大长度=23 (预热时 23)
+iterative BFS            n=     30  p50=19360738  p90=21981964  p99= 22665617  p999=  22665617  max=   24853100  mean=19928321.9  (ns)
+   -> 2.31 ns/node, 队列最大长度=4194304 (预热时 4194304)
+peak_rss@end = 85784 KB  (树本身 67108856 B)
+
+== h=17 DFS 布局对照 ==
+bench_invert: h=17 nodes=262143 repeats=30 shape=perfect/dfs-layout
+clock_getres = 1 ns, timer overhead = 17 ns, peak_rss@start = 2688 KB
+recursive                n=     30  p50= 844629  p90= 1396883  p99=  1518084  p999=   1518084  max=    3923899  mean=994996.5  (ns)
+   -> 3.22 ns/node, 递归最大深度=17 (log2 n=18.0)
+iterative DFS            n=     30  p50= 878788  p90= 1006847  p99=  1105425  p999=   1105425  max=    1392828  mean=885739.6  (ns)
+   -> 3.35 ns/node, 显式栈最大长度=18 (预热时 18)
+iterative BFS            n=     30  p50= 496694  p90=  836705  p99=   920468  p999=    920468  max=     956073  mean=573035.2  (ns)
+   -> 1.89 ns/node, 队列最大长度=131072 (预热时 131072)
+peak_rss@end = 7120 KB  (树本身 2097144 B)

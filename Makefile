@@ -1,5 +1,5 @@
 # 顶层：逐目录构建
-DIRS := ch03/3_1_cache ch03/3_2_vm_alloc ch03/3_x_container x_lang_overhead
+DIRS := ch03/3_1_cache ch03/3_2_vm_alloc ch03/3_x_container x_lang_overhead x_invert_tree
 
 .PHONY: all clean help $(DIRS)
 
