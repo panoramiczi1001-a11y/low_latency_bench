@@ -29,3 +29,5 @@ x_lang_overhead/bench_cpp
 x_lang_overhead/bench_cpp_gl
 x_lang_overhead/bench_cython.c
 x_invert_tree/bench_invert
+
+x_group_anagram/bench_anagram
